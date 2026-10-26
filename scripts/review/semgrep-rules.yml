@@ -1,0 +1,25 @@
+# Offline security advisory only. MoneyPrinterV2 is archived: do not run publishers.
+rules:
+  - id: mpv2.py.http-tls-disabled
+    languages: [python]
+    severity: WARNING
+    message: "HTTP request bypasses TLS certificate checks."
+    pattern: requests.$METHOD(..., verify=False, ...)
+  - id: mpv2.py.unsafe-yaml-load
+    languages: [python]
+    severity: WARNING
+    message: "Unsafe YAML load may instantiate untrusted objects."
+    pattern: yaml.load($DATA)
+  - id: mpv2.py.shell-true
+    languages: [python]
+    severity: INFO
+    message: "Check shell=True command injection in media/outreach helpers."
+    pattern-either:
+      - pattern: subprocess.run(..., shell=True, ...)
+      - pattern: subprocess.Popen(..., shell=True, ...)
+      - pattern: subprocess.call(..., shell=True, ...)
+  - id: mpv2.py.unverified-ssl
+    languages: [python]
+    severity: WARNING
+    message: "Unverified TLS context in automation."
+    pattern: ssl._create_unverified_context(...)
